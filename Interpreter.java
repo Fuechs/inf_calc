@@ -20,8 +20,8 @@ public class Interpreter {
             case BinaryExpr:
                 run(root.getLHS());
                 run(root.getRHS());
-                double b = stack.pop()
-                double a = stack.pop()
+                double b = stack.pop();
+                double a = stack.pop();
                 switch (root.getOperator()) {
                     case '+' -> stack.push(a + b); 
                     case '-' -> stack.push(a - b); 
