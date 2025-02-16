@@ -20,23 +20,13 @@ public class Interpreter {
             case BinaryExpr:
                 run(root.getLHS());
                 run(root.getRHS());
+                double b = stack.pop()
+                double a = stack.pop()
                 switch (root.getOperator()) {
-                    case '+': stack.push(stack.pop() + stack.pop()); break;
-                    case '-': {
-                        // stack: b a ...
-                        // a - b
-                        double b = stack.pop();
-                        stack.push(stack.pop() - b);
-                        break;
-                    }
-                    case '*': stack.push(stack.pop() * stack.pop()); break;
-                    case '/': {
-                        // stack: b a ...
-                        // a / b
-                        double b = stack.pop();
-                        stack.push(stack.pop() / b);
-                        break;
-                    }
+                    case '+' -> stack.push(a + b); 
+                    case '-' -> stack.push(a - b); 
+                    case '*' -> stack.push(a * b);
+                    case '/' -> stack.push(a / b);
                 }
                 break;
             case NumberExpr: 
