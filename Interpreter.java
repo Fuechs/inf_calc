@@ -4,18 +4,27 @@ import java.util.Stack;
 
 public class Interpreter {
     Stack<Double> stack;
-    Map<String, Double> map;
+    Map<String, Double> variables;
+    Map<String, AST> functions;
 
     public Interpreter() {
         stack = new Stack<>();
-        map = new HashMap<>();
+        variables = new HashMap<>();
+        functions = new HashMap<>();
+
+        functions.put("sqrt", // sqrt(x) = x^(1/2)
+            new BinaryExpr('^', 
+                new NameExpr("x"),
+                new BinaryExpr('/',    
+                    new NumberExpr(1), 
+                    new NumberExpr(2))));
     }
 
     public void run(AST root) {
         switch (root.getType()) {
             case VariableStmt:
                 run(root.getLHS());
-                map.put(root.getName(), stack.pop());
+                variables.put(root.getName(), stack.pop());
                 break;
             case BinaryExpr:
                 run(root.getLHS());
@@ -27,18 +36,19 @@ public class Interpreter {
                     case '-' -> stack.push(a - b); 
                     case '*' -> stack.push(a * b);
                     case '/' -> stack.push(a / b);
+                    case '^' -> stack.push(Math.pow(a, b));
                 }
                 break;
             case NumberExpr: 
                 stack.push(root.getValue());
                 break;
             case NameExpr:
-                if (!map.containsKey(root.getName())) {
+                if (!variables.containsKey(root.getName())) {
                     System.err.println("No variable called '"+root.getName()+"'");
                     System.exit(1);
                     return;
                 }
-                stack.push(map.get(root.getName()));
+                stack.push(variables.get(root.getName()));
                 break;
         }
     }

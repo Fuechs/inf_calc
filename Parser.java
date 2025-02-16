@@ -38,17 +38,26 @@ public class Parser {
     }
 
     public Expr parseMultiplicativeExpr() {
-        Expr lhs = parsePrimaryExpr();
+        Expr lhs = parsePowerExpr();
 
         while (tokens.get(i).equals("*") || tokens.get(i).equals("/"))
+            lhs = new BinaryExpr(eat().charAt(0), lhs, parsePowerExpr());
+
+        return lhs;
+    }
+
+    public Expr parsePowerExpr() {
+        Expr lhs = parsePrimaryExpr();
+
+        while (tokens.get(i).equals("^"))
             lhs = new BinaryExpr(eat().charAt(0), lhs, parsePrimaryExpr());
 
         return lhs;
     }
 
     public Expr parsePrimaryExpr() {
-        if (tokens.get(i).chars().allMatch(Character::isDigit)) 
-            return new NumberExpr(Integer.parseInt(eat()));
+        if (tokens.get(i).matches("-?\\d+(\\.\\d+)?")) 
+            return new NumberExpr(Double.parseDouble(eat()));
 
         if (tokens.get(i).chars().allMatch(Character::isLetter))
             return new NameExpr(eat());

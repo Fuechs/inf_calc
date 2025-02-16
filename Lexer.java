@@ -11,6 +11,7 @@ public class Lexer {
                 case '-':
                 case '*':
                 case '/':
+                case '^':
                 case '(':
                 case ')':
                 case '=':
@@ -21,9 +22,17 @@ public class Lexer {
 
                 default:
                     if (Character.isDigit(input.charAt(i))) { // parse numbers
+                        boolean hasDot = false;
                         current += input.charAt(i);
-                        while (i+1 < input.length() && Character.isDigit(input.charAt(i+1)))
+                        while (i+1 < input.length() && (Character.isDigit(input.charAt(i+1)) || input.charAt(i+1) == '.')) {
+                            if (input.charAt(i+1) == '.')
+                                if (hasDot) {
+                                    System.err.println("Invalid number: '"+current+".'");
+                                    break;
+                                } else
+                                    hasDot = true;
                             current += input.charAt(++i);
+                        }
                     } else if (Character.isLetter(input.charAt(i))) { // parse identifiers
                         current += input.charAt(i);
                         while (i+1 < input.length() && Character.isLetter(input.charAt(i+1)))
