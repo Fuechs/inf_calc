@@ -14,7 +14,7 @@ public class Interpreter {
 
         functions.put("sqrt", // sqrt(x) = x^(1/2)
             new BinaryExpr('^', 
-                new NameExpr("x"),
+                new NameExpr("_"),
                 new BinaryExpr('/',    
                     new NumberExpr(1), 
                     new NumberExpr(2))));
@@ -38,6 +38,11 @@ public class Interpreter {
                     case '/' -> stack.push(a / b);
                     case '^' -> stack.push(Math.pow(a, b));
                 }
+                break;
+            case CallExpr:
+                run(root.getLHS());
+                variables.put("_", stack.pop());
+                run(functions.get(root.getName()));
                 break;
             case NumberExpr: 
                 stack.push(root.getValue());

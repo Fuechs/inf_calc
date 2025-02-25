@@ -1,10 +1,3 @@
-enum ASTType {
-    VariableStmt,
-    BinaryExpr,
-    NumberExpr,
-    NameExpr,
-};
-
 public abstract class AST {
     public abstract void print();
     public abstract ASTType getType();

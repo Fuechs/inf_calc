@@ -47,11 +47,27 @@ public class Parser {
     }
 
     public Expr parsePowerExpr() {
-        Expr lhs = parsePrimaryExpr();
+        Expr lhs = parseCallExpr();
 
         while (tokens.get(i).equals("^"))
-            lhs = new BinaryExpr(eat().charAt(0), lhs, parsePrimaryExpr());
+            lhs = new BinaryExpr(eat().charAt(0), lhs, parseCallExpr());
 
+        return lhs;
+    }
+    
+    public Expr parseCallExpr() {
+        Expr lhs = parsePrimaryExpr();
+        
+        if (lhs.getType() == ASTType.NameExpr && tokens.get(i).equals("(")) {
+            eat();
+            Expr argument = null;
+            if (!tokens.get(i).equals(")"))
+                argument = parseExpr();
+            
+            lhs = new CallExpr(lhs.getName(), argument);
+            eat(")");
+        }
+        
         return lhs;
     }
 
